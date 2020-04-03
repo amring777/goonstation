@@ -1587,6 +1587,18 @@
 			mob.update_body()
 			mob.update_clothing()
 
+			H.blood_id = "milk"
+			H.blood_color = "FFFFFF"
+
+
+	disposing()
+		if (ishuman(mob))
+			var/mob/living/carbon/human/H = mob
+			H.blood_id = initial(H.blood_id)
+			H.blood_color = initial(H.blood_color)
+		..()
+
+
 	proc/fix_colors(var/hex)
 		var/list/L = hex_to_rgb_list(hex)
 		for (var/i in L)
@@ -1597,7 +1609,8 @@
 		return rgb(22, 210, 22)
 
 	say_filter(var/message)
-		return replacetext(message, "m", stutter("mm"))
+		.= replacetext(message, "cow", "human")
+		.= replacetext(., "m", stutter("mm"))
 
 	emote(var/act, var/voluntary)
 		switch(act)
@@ -1632,7 +1645,7 @@
 
 			var/obj/item/reagent_containers/pee_target = mob.equipped()
 			if(istype(pee_target) && pee_target.reagents && pee_target.reagents.total_volume < pee_target.reagents.maximum_volume && pee_target.is_open_container())
-				.= ("<span style=\"color:red\"><B>[mob] fills [pee_target] with milk!</B></span>")
+				.= ("<span style=\"color:red\"><B>[mob] pees in [pee_target] with milk!</B></span>")
 				playsound(get_turf(mob), "sound/misc/pourdrink.ogg", 50, 1)
 				pee_target.reagents.add_reagent("milk", 20)
 				return
