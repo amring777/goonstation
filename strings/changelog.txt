@@ -1,5 +1,36 @@
-﻿
-(t)mon apr 12 20
+
+(t)wed apr 15 20
+(u)Erinexx
+(p)112
+(e)🐛🎨|bug spriting
+(*)New hydro tray sprite!
+(*)Hydro trays now properly update visual water level without having to have a plant growing!
+(*)Hydro trays now properly display reagent-colour in the trays water pool!
+(u)Kubius
+(p)247
+(e)🆕🗺|enhancement mapping
+(*)Kondaru (Kubius Map 3: Third Time's the Charm) has moved into official rotation.
+(u)Kubius
+(p)250
+(e)🐛🗺|bug mapping
+(+)Fixed habitat dome prefab - no longer shrouded in shadow.
+(u)Tarmunora
+(p)244
+(e)⚖|balance
+(*)Power picks, hammers, shovels now use standard small power cells for their internal charge. This makes them charge more quickly, as an aside. Additionally, attacking things that aren't asteroids with them will drain their cell much more quickly - if using one as a weapon, keep an eye on your charge!
+(u)Tarmunora
+(p)242
+(*)Rebalanced meatcleaver to fumble far less often on hit and removes stun on throw
+(u)trerri
+(+)Added extra supplies to the Oshan locker room.
+(t)tue apr 14 20
+(u)comradef191
+(+)Fixed up Mushroom a lot.
+(u)adharainspace
+(+)Fixed weird photocopier bugs and makes them less painful to use.
+(t)mon apr 13 20
+(u)Kubius
+(+)Batch one of small improvements and fixes to Kondaru.
 (u)Erinexx
 (+)Resprited janitor equipment (mops, buckets, laundry machines, ...).
 (u)ASS_JAM
