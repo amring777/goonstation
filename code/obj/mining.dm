@@ -32,7 +32,7 @@
 				return
 			user.visible_message("<b>[user]</b> begins constructing a new magnet.")
 			var/turf/T = get_turf(user)
-			sleep(240)
+			sleep(24 SECONDS)
 			if (user.loc == T && user.equipped() == W && !user.stat)
 				var/obj/magnet = new W:constructed_magnet(get_turf(src))
 				magnet.dir = src.dir
@@ -1453,10 +1453,14 @@
 	var/sound/hitsound_uncharged = 'sound/impact_sounds/Stone_Cut_1.ogg'
 	module_research = list("tools" = 3, "engineering" = 1, "mining" = 1)
 
+	New()
+		..()
+		BLOCK_ROD
+
 	// Seems like a basic bit of user feedback to me (Convair880).
 	examine()
 		..()
-		if (!src.cell) return 
+		if (!src.cell) return
 		if (isrobot(usr)) return // Drains battery instead.
 		boutput(usr, "The [src.name] is turned [src.status ? "on" : "off"]. There are [src.cell.charge]/[src.cell.max_charge] PUs left!")
 		return
@@ -1498,7 +1502,16 @@
 			src.overlays = null
 			signal_event("icon_updated")
 		return
-		
+
+	attackby(obj/item/b as obj, mob/user as mob)
+		if (istype(b, /obj/item/ammo/power_cell/))
+			var/obj/item/ammo/power_cell/pcell = b
+			if (src.cell)
+				if (pcell.swap(src))
+					user.visible_message("<span style=\"color:red\">[user] swaps [src]'s power cell.</span>")
+		else
+			..()
+
 	proc/update_icon()
 		return
 obj/item/clothing/gloves/concussive
@@ -1551,19 +1564,6 @@ obj/item/clothing/gloves/concussive
 		else
 			boutput(user, "<span style=\"color:red\">No charge left in [src].</span>")
 
-	attackby(obj/item/b as obj, mob/user as mob)
-		if (istype(b, /obj/item/ammo/power_cell/))
-			var/obj/item/ammo/power_cell/pcell = b
-			if (src.cell)
-				if (pcell.swap(src))
-					user.visible_message("<span style=\"color:red\">[user] swaps [src]'s power cell.</span>")
-			else
-				src.cell = pcell
-				user.drop_item()
-				pcell.set_loc(src)
-				user.visible_message("<span style=\"color:red\">[user] swaps [src]'s power cell.</span>")
-		else
-			..()
 
 	power_up()
 		..()
@@ -1574,7 +1574,7 @@ obj/item/clothing/gloves/concussive
 		..()
 		src.force = 7
 		src.dig_strength = 1
-		
+
 
 	borg
 		process_charges(var/use)
@@ -1609,7 +1609,7 @@ obj/item/clothing/gloves/concussive
 	icon_state = "powerhammer"
 	inhand_image_icon = 'icons/mob/inhand/hand_tools.dmi'
 	item_state = "hammer"
-	cell = new/obj/item/ammo/power_cell 
+	cell = new/obj/item/ammo/power_cell
 	force = 9
 	dig_strength = 3
 	digcost = 3

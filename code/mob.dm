@@ -573,7 +573,7 @@
 						if(M.anchored || M == source) continue
 						M.throw_at(source, 20, 3)
 						LAGCHECK(LAG_MED)
-					sleep(50)
+					sleep(5 SECONDS)
 					src.now_pushing = 0
 
 					if (tmob) //Wire: Fix for: Cannot modify null.now_pushing
@@ -628,6 +628,7 @@
 						else
 							pulling += src.pulling
 					for (var/obj/item/grab/G in src.equipped_list(check_for_magtractor = 0))
+						if (G.affecting == src) continue
 						pulling += G.affecting
 					for (var/atom/movable/A in pulling)
 						if (get_dist(src, A) == 0) // if we're moving onto the same tile as what we're pulling, don't pull
@@ -961,7 +962,7 @@
 		src.health -= max(0, burn)
 
 /mob/proc/TakeDamageAccountArmor(zone, brute, burn, tox, damage_type)
-	TakeDamage(zone, brute-get_melee_protection(zone), burn-get_melee_protection(zone))
+	TakeDamage(zone, brute-get_melee_protection(zone,damage_type), burn-get_melee_protection(zone,damage_type))
 
 /mob/proc/HealDamage(zone, brute, burn, tox)
 	health += max(0, brute)
@@ -2262,7 +2263,7 @@
 			client.pixel_x = amplitude * sin(0.008 * dizziness * world.time)
 			client.pixel_y = amplitude * cos(0.008 * dizziness * world.time)
 
-		sleep(1)
+		sleep(0.1 SECONDS)
 	//endwhile - reset the pixel offsets to zero
 	is_dizzy = 0
 	if (client)
@@ -2298,7 +2299,7 @@
 		pixel_x = old_x + rand(-amplitude, amplitude)
 		pixel_y = old_y + rand(-amplitude/3, amplitude/3)
 
-		sleep(1)
+		sleep(0.1 SECONDS)
 	//endwhile - reset the pixel offsets to zero
 	is_jittery = 0
 	pixel_x = old_x

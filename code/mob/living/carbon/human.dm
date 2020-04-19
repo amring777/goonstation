@@ -617,7 +617,7 @@
 				emote("deathgasp")
 				src.visible_message("<span style=\"color:red\"><B>[src]</B> begins to grow another head!</span>")
 				src.show_text("<b>We begin to grow a headspider...</b>", "blue")
-				sleep(200)
+				sleep(20 SECONDS)
 				if(!M || M.disposed)
 					return
 				if (M && M.current)
@@ -820,7 +820,7 @@
 	if (src.nodamage)
 		return tally
 
-	if (src.getStatusDuration("staggered"))
+	if (src.getStatusDuration("staggered") || src.hasStatus("blocking"))
 		tally += 0.5
 		//sprint disable handled in input.dm process_move, so that stamina isn't used up when running is impossible
 
@@ -1143,17 +1143,9 @@
 	if (!item) return
 
 	if (istype(item, /obj/item/grab))
-		var/obj/item/grab/grab = item
-		var/mob/M = grab.affecting
-		if (istype(M))
-			if ((grab.state < 1 && !(M.getStatusDuration("paralysis") || M.getStatusDuration("weakened") || M.stat)) || !isturf(src.loc))
-				src.visible_message("<span style=\"color:red\">[M] stumbles a little!</span>")
-				u_equip(grab)
-				return
-			M.lastattacker = src
-			M.lastattackertime = world.time
-			u_equip(grab)
-			item = M
+		var/obj/item/grab/G = item
+		item = G.handle_throw(src, target)
+		if (!item) return
 
 	u_equip(item)
 
@@ -1399,6 +1391,7 @@
 
 	actions.interrupt(src, INTERRUPT_ATTACKED)
 	M.lastattacked = src
+
 	attack_particle(M,src)
 
 	if (!ishuman(M) && !ismobcritter(M))
@@ -2690,7 +2683,7 @@
 	boutput(src, "<span style=\"color:red\"><B>You feel a [wattage > 7500 ? "powerful" : "slight"] shock course through your body!</B></span>")
 	src.unlock_medal("HIGH VOLTAGE", 1)
 	src.Virus_ShockCure(min(wattage / 500, 100))
-	sleep(1)
+	sleep(0.1 SECONDS)
 
 #ifdef USE_STAMINA_DISORIENT
 	var/stun = (min((shock_damage/5), 12) * stun_multiplier)* 10

@@ -26,6 +26,7 @@ TRAYS
 	New()
 		..()
 		src.setItemSpecial(/datum/item_special/swipe)
+		BLOCK_ROD
 
 /obj/item/kitchen/rollingpin/light
 	name = "light rolling pin"
@@ -51,6 +52,7 @@ TRAYS
 	New()
 		if(prob(60))
 			src.pixel_y = rand(0, 4)
+		BLOCK_KNIFE
 		return
 
 	verb/rotate()
@@ -465,7 +467,7 @@ TRAYS
 				F.throw_at(pick(throw_targets), 5, 1)
 
 	proc/unique_attack_garbage_fuck(mob/M as mob, mob/user as mob)
-		sleep(3)
+		sleep(0.3 SECONDS)
 		M.TakeDamageAccountArmor("head", force, 0, 0, DAMAGE_BLUNT)
 		M.changeStatus("weakened", 2 SECONDS)
 		M.force_laydown_standup()
@@ -479,7 +481,7 @@ TRAYS
 			var/mob/living/carbon/human/H = user
 			H.sever_limb(H.hand == 1 ? "l_arm" : "r_arm")
 		else
-			sleep(3)
+			sleep(0.3 SECONDS)
 			qdel(src)
 
 	throw_impact(var/turf/T)
@@ -821,6 +823,10 @@ TRAYS
 	var/list/toppingdata = list() //(food_color)
 	var/obj/item/reagent_containers/food/snacks/sushi_roll/custom/roll//= new /obj/item/reagent_containers/food/snacks/sushi_roll/custom
 
+	New()
+		..()
+		BLOCK_BOOK
+
 	attackby(obj/item/W as obj, mob/user as mob)
 
 		if(!(locate(/obj/item/reagent_containers/food/snacks/sushi_roll/custom) in src))
@@ -1086,7 +1092,7 @@ TRAYS
 					if(src.platenum == 7)
 						break
 					else
-						sleep(2)
+						sleep(0.2 SECONDS)
 				return
 		else
 			return ..()
@@ -1123,6 +1129,6 @@ TRAYS
 				if(src.platenum == 7)
 					break
 				else
-					sleep(2)
+					sleep(0.2 SECONDS)
 			return
 
