@@ -99,9 +99,9 @@
 			available_job_roles.Add(JOB)
 
 	// Wiggle it like a pissy caterpillar
-	available_job_roles = shuffle(available_job_roles)
+	shuffle_list(available_job_roles)
 	// Wiggle the players too so that priority isn't determined by key alphabetization
-	unassigned = shuffle(unassigned)
+	shuffle_list(unassigned)
 
 	// First we deal with high-priority jobs like Captain or AI which generally will always
 	// be present on the station - we want these assigned first just to be sure
@@ -309,7 +309,7 @@
 
 	var/datum/job/JOB = find_job_in_controller_by_string(rank)
 	if (!JOB)
-		boutput(src, "<span style=\"color:red\"><b>Something went wrong setting up your rank and equipment! Report this to a coder.</b></span>")
+		boutput(src, "<span class='alert'><b>Something went wrong setting up your rank and equipment! Report this to a coder.</b></span>")
 		return
 
 	//if(JOB.name == "Captain")
@@ -399,7 +399,7 @@
 				var/obj/machinery/vehicle/V = pick(random_pod_codes)
 				random_pod_codes -= V
 				if (V && V.lock && V.lock.code)
-					boutput(src, "<span style=\"color:blue\">The unlock code to your pod ([V]) is: [V.lock.code]</span>")
+					boutput(src, "<span class='notice'>The unlock code to your pod ([V]) is: [V.lock.code]</span>")
 					if (src.mind)
 						src.mind.store_memory("The unlock code to your pod ([V]) is: [V.lock.code]")
 
@@ -462,6 +462,12 @@
 				D.data = R.fields
 				D.data_type = "cloning_record"
 				D.name = "data disk - '[src.real_name]'"
+
+			if(JOB.receives_badge)
+				var/obj/item/clothing/suit/security_badge/B = new /obj/item/clothing/suit/security_badge(src)
+				src.equip_if_possible(B, slot_in_backpack)
+				B.badge_owner_name = src.real_name
+				B.badge_owner_job = src.job
 
 	if (JOB.slot_jump)
 		src.equip_new_if_possible(JOB.slot_jump, slot_w_uniform)
@@ -597,7 +603,7 @@
 		PDA.ownerAssignment = JOB.name
 		PDA.name = "PDA-[src.real_name]"
 
-	boutput(src, "<span style=\"color:blue\">Your pin to your ID is: [C.pin]</span>")
+	boutput(src, "<span class='notice'>Your pin to your ID is: [C.pin]</span>")
 	if (src.mind)
 		src.mind.store_memory("Your pin to your ID is: [C.pin]")
 
@@ -622,7 +628,7 @@
 /mob/living/carbon/human/proc/JobEquipSpawned(rank, no_special_spawn)
 	var/datum/job/JOB = find_job_in_controller_by_string(rank)
 	if (!JOB)
-		boutput(src, "<span style=\"color:red\"><b>UH OH, the game couldn't find your job to set it up! Report this to a coder.</b></span>")
+		boutput(src, "<span class='alert'><b>UH OH, the game couldn't find your job to set it up! Report this to a coder.</b></span>")
 		return
 
 	if (JOB.slot_back)
@@ -667,6 +673,25 @@
 	update_inhands()
 
 	return
+
+// this proc is shit, make a better one 2day
+proc/bad_traitorify(mob/living/carbon/human/H, traitor_role="hard-mode traitor")
+	var/list/eligible_objectives = typesof(/datum/objective/regular/) + typesof(/datum/objective/escape/) - /datum/objective/regular/
+	var/num_objectives = rand(1,3)
+	var/datum/objective/new_objective = null
+	for(var/i = 0, i < num_objectives, i++)
+		var/select_objective = pick(eligible_objectives)
+		new_objective = new select_objective
+		new_objective.owner = H.mind
+		new_objective.set_up()
+		H.mind.objectives += new_objective
+
+	H.mind.special_role = traitor_role
+	H << browse(grabResource("html/traitorTips/traitorhardTips.html"),"window=antagTips;titlebar=1;size=600x400;can_minimize=0;can_resize=0")
+	if(!(H.mind in ticker.mode.traitors))
+		ticker.mode.traitors += H.mind
+	if (H.mind.current)
+		H.mind.current.antagonist_overlay_refresh(1, 0)
 
 //////////////////////////////////////////////
 // cogwerks - personalized trinkets project //

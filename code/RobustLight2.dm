@@ -41,7 +41,7 @@ proc/get_moving_lights_stats()
 
 #define RL_APPLY_LIGHT(src, lx, ly, brightness, height2, r, g, b) do { \
 	if (src.loc?:force_fullbright) { break } \
-	var/atten = (brightness*RL_Atten_Quadratic) / ((src.x - lx)**2 + (src.y - ly)**2 + height2) + RL_Atten_Constant ; \
+	var/atten = (brightness*RL_Atten_Quadratic) / ((src.x - lx)*(src.x - lx) + (src.y - ly)*(src.y - ly) + height2) + RL_Atten_Constant ; \
 	if (atten < 0) { break } \
 	src.RL_LumR += r*atten ; \
 	src.RL_LumG += g*atten ; \
@@ -49,7 +49,7 @@ proc/get_moving_lights_stats()
 	src.RL_AddLumR = clamp((src.RL_LumR - 1) * 0.5, 0, 0.3) ; \
 	src.RL_AddLumG = clamp((src.RL_LumG - 1) * 0.5, 0, 0.3) ; \
 	src.RL_AddLumB = clamp((src.RL_LumB - 1) * 0.5, 0, 0.3) ; \
-	src.RL_NeedsAdditive = (src.RL_AddLumR > 0) || (src.RL_AddLumG > 0) || (src.RL_AddLumB > 0) ; \
+	src.RL_NeedsAdditive = src.RL_AddLumR + src.RL_AddLumG + src.RL_AddLumB ; \
 	} while(false)
 
 #define APPLY_AND_UPDATE if (RL_Started) { for (var/turf in src.apply()) { var/turf/T = turf; RL_UPDATE_LIGHT(T) } }
@@ -57,7 +57,7 @@ proc/get_moving_lights_stats()
 #define RL_Atten_Quadratic 2.2 // basically just brightness scaling atm
 #define RL_Atten_Constant -0.11 // constant subtracted at every point to make sure it goes <0 after some distance
 #define RL_MaxRadius 6 // maximum allowed light.radius value. if any light ends up needing more than this it'll cap and look screwy
-#define DLL 0.01 //Darkness Lower Limit, at 0 things can get absolutely pitch black.
+#define DLL 0 //Darkness Lower Limit, at 0 things can get absolutely pitch black.
 
 #define D_BRIGHT 1
 #define D_COLOR 2
@@ -131,6 +131,7 @@ datum/light
 		disable(queued_run = 1) //dont queue... we wanna actually disable it before remove_from_turf etc
 		remove_from_turf()
 		detach()
+		..()
 
 	proc
 		set_brightness(brightness, queued_run = 0)
