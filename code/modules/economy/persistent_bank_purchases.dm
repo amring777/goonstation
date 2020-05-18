@@ -111,6 +111,16 @@ var/global/list/persistent_bank_purchaseables =	list(\
 					R.clothes["head"] = O
 					O.set_loc(R)
 					equip_success = 1
+				if(equip_success)
+					R.update_appearance()
+
+		if(isAI(M))
+			var/mob/living/silicon/ai/AI = M
+			if (ispath(path, /obj/item/clothing))
+				if(ispath(path,/obj/item/clothing/head))
+					AI.set_hat(new path(AI))
+					equip_success = 1
+
 
 
 		//The AI can't really wear items...
@@ -390,6 +400,7 @@ var/global/list/persistent_bank_purchaseables =	list(\
 	corpse
 		name = "Corpse"
 		cost = 15000
+		carries_over = 0
 
 		Create(var/mob/living/M)
 			setdead(M)
