@@ -1,5 +1,37 @@
 
+(t)wed may 20 20
+(u)pali
+(p)772
+(e)🐛|bug
+(+)Scooping up fluids with a beaker now removes only as much fluid as can fit in the beaker
+(u)pali
+(p)771
+(e)⚖|balance
+(+)Activated nuclear bombs now glow softly.
+(u)TrustworthyFella
+(p)701
+(e)🆕|enhancement
+(+)Made Original Sin blood floods size and reagent depend on the amount of blood in you, and what your blood reagent is.
+(u)pali
+(*)Erebokinesis and darkness artifact should now be slightly less infuriating.
 (t)tue may 19 20
+(u)Flourish
+(p)764
+(e)🆕🎨|enhancement, sprites
+(+)Added a cardboard clown car box as a level 5 clown job reward. Sprites by Erinexx.
+(u)Sovexe
+(p)731
+(e)🐛|bug
+(+)AIs and Borgs can no longer be given blank names.
+(+)You can no longer specify a blank name in the character creator.
+(u)Tarmunora
+(p)756
+(e)🆕🔄|enhancement, rework
+(*)Magboots made more versatile, and toggleable, at the cost of a minor slowdown
+(u)Erinexx
+(p)750
+(e)🎨|sprites
+(*)Updated powernet & Artsci sprites
 (u)Gannets
 (p)746
 (e)⚖🎨|balance, sprites
