@@ -2034,15 +2034,11 @@ proc/copy_datum_vars(var/atom/from, var/atom/target)
 var/list/uppercase_letters = list("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z")
 var/list/lowercase_letters = list("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z")
 
+var/global/list/allowed_restricted_z_areas
 // Helper for blob, wraiths and whoever else might need them (Convair880).
 /proc/restricted_z_allowed(var/mob/M, var/T)
-	var/list/allowed = list()
-	for (var/areas in typesof(/area/shuttle/escape))
-		if (!allowed.Find(areas))
-			allowed.Add(areas)
-	for (var/areas2 in typesof(/area/shuttle_transit_space))
-		if (!allowed.Find(areas2))
-			allowed.Add(areas2)
+	if(!allowed_restricted_z_areas)
+		allowed_restricted_z_areas = typesof(/area/shuttle/escape) + typesof(/area/shuttle_transit_space)
 
 	if (M && isblob(M))
 		var/mob/living/intangible/blob_overmind/B = M
@@ -2055,7 +2051,7 @@ var/list/lowercase_letters = list("a", "b", "c", "d", "e", "f", "g", "h", "i", "
 	else if (T && isturf(T))
 		A = get_area(T)
 
-	if (A && istype(A) && (A.type in allowed))
+	if (A && istype(A) && (A.type in allowed_restricted_z_areas))
 		return 1
 	return 0
 
@@ -2364,14 +2360,16 @@ proc/angle_to_dir(angle)
 			.= SOUTH
 
 /**
-  * Transforms a supplied vector x & y to a direction
+  * Removes non-whitelisted reagents from the reagents of TA
   * user: the mob that adds a reagent to an atom that has a reagent whitelist
   * TA: Target Atom. The thing that the user is adding the reagent to
   */
 
-proc/check_whitelist(var/atom/TA, var/list/whitelist, var/mob/user as mob)
+proc/check_whitelist(var/atom/TA, var/list/whitelist, var/mob/user as mob, var/custom_message = "")
 	if (!whitelist || (!TA || !TA.reagents) || (islist(whitelist) && !whitelist.len))
 		return
+	if (!custom_message)
+		custom_message = "<span class='alert'>[TA] identifies and removes a harmful substance.</span>"
 
 	var/found = 0
 	for (var/reagent_id in TA.reagents.reagent_list)
@@ -2380,13 +2378,12 @@ proc/check_whitelist(var/atom/TA, var/list/whitelist, var/mob/user as mob)
 			found = 1
 	if (found)
 		if (user)
-			user.show_text("[TA] identifies and removes a harmful substance.", "red") // haine: done -> //TODO: using usr in procs is evil shame on you
+			boutput(user, "[custom_message]") // haine: done -> //TODO: using usr in procs is evil shame on you
 		else if (ismob(TA.loc))
 			var/mob/M = TA.loc
-			M.show_text("[TA] identifies and removes a harmful substance.", "red")
+			boutput(M, "[custom_message]")
 		else
-			TA.visible_message("<span class='alert'>[TA] identifies and removes a harmful substance.</span>")
-
+			TA.visible_message("[custom_message]")
 
 /proc/in_cone_of_vision(var/atom/seer, var/atom/target)
 	/*

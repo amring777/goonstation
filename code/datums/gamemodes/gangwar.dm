@@ -172,12 +172,12 @@
 	if(leaderMind.gang.gang_name == "NICOLAS CAGE FAN CLUB")
 		leaderMind.gang.item2 = /obj/item/clothing/mask/niccage
 	else
-		var/temp_item2 = input(leaderMind.current, "Select jumpsuit slot item","Gang Headwear")in headwear_list
+		var/temp_item2 = input(leaderMind.current, "Select head slot item","Gang Headwear")in headwear_list
 		leaderMind.gang.item2 = headwear_list[temp_item2]
 
 	while(leaderMind.gang.item2 in item2_used)
 		boutput(leaderMind.current , "<h4><span class='alert'>That item has been claimed by another gang.</span></h4>")
-		var/temp_item2 = input(leaderMind.current, "Select jumpsuit slot item","Gang Headwear")in headwear_list
+		var/temp_item2 = input(leaderMind.current, "Select head slot item","Gang Headwear")in headwear_list
 		leaderMind.gang.item2 = headwear_list[temp_item2]
 
 	item2_used += leaderMind.gang.item2
@@ -1009,6 +1009,8 @@
 		score += O.reagents.get_reagent_amount("catdrugs")
 		score += O.reagents.get_reagent_amount("methamphetamine")*1.5 //meth
 
+		if(istype(O, /obj/item/plant/herb/cannabis) && O.reagents.get_reagent_amount("THC") == 0)
+			score += 7
 		return round(score)
 
 	proc/cash_amount()
@@ -1337,34 +1339,30 @@ proc/get_gang_gear(var/mob/living/carbon/human/user)
 				haspaint = 1
 			else if(istype(I,/obj/item/device/radio/headset/gang) && I:secure_frequencies && I:secure_frequencies["g"] == user.mind.gang.gang_frequency)
 				hasheadset = 1
-		if(hasitem1 && hasitem2 && hasheadset)
-			if(!haspaint)
-				new /obj/item/spray_paint(user.loc)
-		else
-			if(!hasitem1)
-				var/obj/item/clothing/C = new user.mind.gang.item1(user.loc)
-				if (user.w_uniform)
-					user.drop_from_slot(user.w_uniform)
-				user.force_equip(C, user.w_uniform)
+		if(!hasitem1)
+			var/obj/item/clothing/C = new user.mind.gang.item1(user.loc)
+			// if (user.w_uniform)
+			// 	user.drop_from_slot(user.w_uniform)
+			user.equip_if_possible(C, user.slot_w_uniform)
 
-			if(!hasitem2)
-				var/obj/item/clothing/C = new user.mind.gang.item2(user.loc)
-				if (istype(C, /obj/item/clothing/head))
-					user.drop_from_slot(user.head)
-					user.force_equip(C, user.head)
-				else if (istype(C, /obj/item/clothing/mask))
-					user.drop_from_slot(user.wear_mask)
-					user.force_equip(C, user.wear_mask)
+		if(!hasitem2)
+			var/obj/item/clothing/C = new user.mind.gang.item2(user.loc)
+			if (istype(C, /obj/item/clothing/head))
+				user.drop_from_slot(user.head)
+				user.equip_if_possible(C, user.slot_head)
+			else if (istype(C, /obj/item/clothing/mask))
+				user.drop_from_slot(user.wear_mask)
+				user.equip_if_possible(C, user.slot_wear_mask)
 
-			if(!hasheadset)
-				var/obj/item/device/radio/headset/gang/headset = new /obj/item/device/radio/headset/gang(user.loc)
-				headset.set_secure_frequency("g",user.mind.gang.gang_frequency)
-				if (user.ears)
-					user.drop_from_slot(user.ears)
-				user.force_equip(headset, user.ears)
+		if(!hasheadset)
+			var/obj/item/device/radio/headset/gang/headset = new /obj/item/device/radio/headset/gang(user.loc)
+			headset.set_secure_frequency("g",user.mind.gang.gang_frequency)
+			if (user.ears)
+				user.drop_from_slot(user.ears)
+			user.equip_if_possible(headset, user.slot_ears)
 
-			if(!haspaint)
-				user.put_in_hand_or_drop(new /obj/item/spray_paint(user.loc))
+		if(!haspaint)
+			user.put_in_hand_or_drop(new /obj/item/spray_paint(user.loc))
 
 		if(user.mind.special_role == "gang_leader")
 			var/obj/item/storage/box/gang_flyers/case = new /obj/item/storage/box/gang_flyers(user.loc)

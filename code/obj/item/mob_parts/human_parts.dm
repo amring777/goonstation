@@ -32,6 +32,7 @@
 				src.sever()
 			else if (bone_system && src.bones && brute && prob(brute * 2))
 				src.bones.take_damage(damage_type)
+		health_update_queue |= holder
 		return 1
 
 	heal_damage(brute, burn, tox)
@@ -40,6 +41,7 @@
 		src.brute_dam = max(0, src.brute_dam - brute)
 		src.burn_dam = max(0, src.burn_dam - burn)
 		src.tox_dam = max(0, src.tox_dam - tox)
+		health_update_queue |= holder
 		return 1
 
 	get_damage()
@@ -160,7 +162,7 @@
 		if (isnull(src.original_DNA) || isnull(src.original_fprints) && ismob(src.original_holder))
 			if (src.original_holder && src.original_holder.bioHolder) //ZeWaka: Fix for null.bioHolder
 				src.original_DNA = src.original_holder.bioHolder.Uid
-				src.original_fprints = md5(src.original_holder.bioHolder.Uid)
+				src.original_fprints = src.original_holder.bioHolder.uid_hash
 		return ..()
 
 /obj/item/parts/human_parts/arm
@@ -423,7 +425,7 @@
 		remove_from_mob(0)
 		..()
 
-	dispose()
+	disposing()
 		remove_from_mob(1)
 		..()
 
@@ -549,7 +551,7 @@
 		remove_from_mob(0)
 		..()
 
-	dispose()
+	disposing()
 		remove_from_mob(1)
 		..()
 
