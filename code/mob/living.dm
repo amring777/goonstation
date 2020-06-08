@@ -124,6 +124,9 @@
 	if (src.static_image)
 		mob_static_icons.Remove(src.static_image)
 		src.static_image = null
+
+	if(src.ai_active)
+		ai_mobs.Remove(src)
 	..()
 
 /mob/living/death(gibbed)
@@ -1112,9 +1115,10 @@ var/global/icon/human_static_base_idiocy_bullshit_crap = icon('icons/mob/human.d
 		else if (src.r_hand)
 			thing = src.r_hand
 
-	//no passing blocks around >:L
-	if (istype(thing,/obj/item/grab/block))
+	//passing grab theoretically could be a mechanic but needs some annoying fixed - swapping around assailant and item grab handling an stuff probably
+	if(istype(thing,/obj/item/grab))
 		return
+
 	if (thing.c_flags & HAS_GRAB_EQUIP)
 		return
 
@@ -1160,6 +1164,9 @@ var/global/icon/human_static_base_idiocy_bullshit_crap = icon('icons/mob/human.d
 
 //Phyvo: Resist generalization. For when humans can break or remove shackles/cuffs, see daughter proc in humans.dm
 /mob/living/proc/resist()
+	if (!isalive(src)) //can't resist when dead or unconscious
+		return
+
 	if (src.last_resist > world.time)
 		return
 	src.last_resist = world.time + 20
@@ -1176,7 +1183,7 @@ var/global/icon/human_static_base_idiocy_bullshit_crap = icon('icons/mob/human.d
 		T.active_liquid.HasEntered(src, T)
 		src.visible_message("<span class='alert'>[src] splashes around in [T.active_liquid]!</b></span>", "<span class='notice'>You splash around in [T.active_liquid].</span>")
 
-	if (!src.stat && !src.restrained())
+	if (!src.restrained())
 		var/struggled_grab = 0
 		if (src.canmove)
 			for (var/obj/item/grab/G in src.grabbed_by)

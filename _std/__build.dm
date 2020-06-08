@@ -74,8 +74,15 @@ o+`        `-` ``..-:yooos-..----------..`
 // Makes the delete queue go through every single datum in the game when a hard del happens
 // It gets reported to the debug log. This process takes about 4 minutes per hard deletion
 // (during that time the server will be frozen).
-// #define LOG_HARD_DELETE_REFERENCES
-// #define LOG_HARD_DELETE_REFERENCES_2_ELECTRIC_BOOGALOO
+//#define LOG_HARD_DELETE_REFERENCES
+//#define LOG_HARD_DELETE_REFERENCES_2_ELECTRIC_BOOGALOO
+// The same thing but powered by extools. Better, harder, faster, stronger.
+// You'll need an extools version that has the right stuff in it to make this work.
+//#define REFERENCE_TRACKING
+//#define AUTO_REFERENCE_TRACKING_ON_HARD_DEL
+
+// Toggle this to turn .dispose() into qdel( ). Useful for trying to find lingering references locally.
+//#define DISPOSE_IS_QDEL
 
 //////////// MAP OVERRIDES
 
@@ -97,6 +104,7 @@ o+`        `-` ``..-:yooos-..----------..`
 //#define MAP_OVERRIDE_DENSITY
 //#define MAP_OVERRIDE_KONDARU
 //#define MAP_OVERRIDE_FLEET
+//#define MAP_OVERRIDE_ICARUS
 //#define MAP_OVERRIDE_GEHENNA			// Warcrimes WIP do not use
 //#define MAP_OVERRIDE_PAMGOC			// Pamgoc
 
