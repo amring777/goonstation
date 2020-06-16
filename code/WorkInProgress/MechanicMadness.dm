@@ -21,6 +21,7 @@ var/list/mechanics_telepads = new/list()
 /datum/mechanicsMessage
 	var/signal = "1"
 	var/list/nodes = list()
+	var/datum/computer/file/data_file
 
 	proc/addNode(var/datum/mechanics_holder/H)
 		nodes.Add(H)
@@ -102,14 +103,15 @@ var/list/mechanics_telepads = new/list()
 
 	//Used to copy a message because we don't want to pass a single message to multiple components which might end up modifying it both at the same time.
 	proc/cloneMessage(var/datum/mechanicsMessage/msg)
-		var/datum/mechanicsMessage/msg2 = newSignal(msg.signal)
+		var/datum/mechanicsMessage/msg2 = newSignal(msg.signal, msg.data_file?.copy_file())
 		msg2.nodes = msg.nodes.Copy()
 		return msg2
 
 	//ALWAYS use this to create new messages!!!
-	proc/newSignal(var/sig)
+	proc/newSignal(var/sig, var/datum/computer/file/data_file=null)
 		var/datum/mechanicsMessage/ret = new/datum/mechanicsMessage
 		ret.signal = sig
+		ret.data_file = data_file
 		return ret
 
 	//Delete all incoming connections
@@ -1413,6 +1415,61 @@ var/list/mechanics_telepads = new/list()
 		icon_state = "[under_floor ? "u":""]comp_relay"
 		return
 
+/obj/item/mechanics/filecomp
+	name = "File Component"
+	desc = ""
+	icon_state = "comp_file"
+	var/datum/computer/file/stored_file
+
+	get_desc()
+		. += "<br><span class='notice'>Stored file:[stored_file ? "<br>Name: [src.stored_file.name]<br>Extension: [src.stored_file.extension]<br>Contents: [src.stored_file.asText()]" : " NONE"]</span>"
+
+	New()
+		..()
+		mechanics.addInput("send file", "sendfile")
+		mechanics.addInput("add file to signal and send", "addandsendfile")
+		mechanics.addInput("save file", "storefile")
+		mechanics.addInput("delete file", "deletefile")
+		src.append_default_configs()
+
+	attackby(obj/item/W as obj, mob/user as mob)
+		if(..(W, user)) return
+		else if(ispulsingtool(W))
+			src.modify_configs()
+
+	proc/sendfile(var/datum/mechanicsMessage/input)
+		if (level == 2 || !src.stored_file) return
+		input.signal = mechanics.outputSignal
+		input.data_file = src.stored_file.copy_file()
+		mechanics.fireOutgoing(input)
+		animate_flash_color_fill(src,"#00FF00",2, 2)
+
+	proc/addandsendfile(var/datum/mechanicsMessage/input)
+		if (level == 2 || !src.stored_file) return
+		input.data_file = src.stored_file.copy_file()
+		mechanics.fireOutgoing(input)
+		animate_flash_color_fill(src,"#00FF00",2, 2)
+
+	proc/storefile(var/datum/mechanicsMessage/input)
+		if (level == 2 || !input.data_file) return
+		src.stored_file = input.data_file.copy_file()
+		animate_flash_color_fill(src,"#00FF00",2, 2)
+
+	proc/deletefile(var/datum/mechanicsMessage/input)
+		if (level == 2 || !src.stored_file) return
+		src.stored_file = null
+		animate_flash_color_fill(src,"#00FF00",2, 2)
+
+	updateIcon()
+		icon_state = "[under_floor ? "u":""]comp_file"
+		return
+
+	disposing()
+		if (src.stored_file)
+			stored_file.dispose()
+		..()
+
+
 /obj/item/mechanics/wificomp
 	name = "Wifi Component"
 	desc = ""
@@ -1488,7 +1545,8 @@ var/list/mechanics_telepads = new/list()
 			sendsig.data["[X]"] = "[converted[X]]"
 			if(X == "command" && converted[X] == "text_message")
 				logTheThing("pdamsg", usr, null, "sends a PDA message <b>[input.signal]</b> using a wifi component at [log_loc(src)].")
-
+		if(input.data_file)
+			sendsig.data_file = input.data_file.copy_file()
 		SPAWN_DBG(0) src.radio_connection.post_signal(src, sendsig, src.range)
 
 		animate_flash_color_fill(src,"#FF0000",2, 2)
@@ -1501,7 +1559,7 @@ var/list/mechanics_telepads = new/list()
 		if((only_directed && signal.data["address_1"] == src.net_id) || !only_directed || (signal.data["address_1"] == "ping"))
 
 			if(send_full)
-				var/datum/mechanicsMessage/msg = mechanics.newSignal(html_decode(list2params_noencode(signal.data)))
+				var/datum/mechanicsMessage/msg = mechanics.newSignal(html_decode(list2params_noencode(signal.data)), signal.data_file?.copy_file())
 				mechanics.fireOutgoing(msg)
 				animate_flash_color_fill(src,"#00FF00",2, 2)
 				return
@@ -1520,7 +1578,7 @@ var/list/mechanics_telepads = new/list()
 					src.radio_connection.post_signal(src, pingsignal, src.range)
 
 			else if(signal.data["command"] == "sendmsg" && signal.data["data"])
-				var/datum/mechanicsMessage/msg = mechanics.newSignal(html_decode(signal.data["data"]))
+				var/datum/mechanicsMessage/msg = mechanics.newSignal(html_decode(signal.data["data"]), signal.data_file?.copy_file())
 				mechanics.fireOutgoing(msg)
 				animate_flash_color_fill(src,"#00FF00",2, 2)
 
@@ -1557,14 +1615,15 @@ var/list/mechanics_telepads = new/list()
 	var/current_index = 1
 	var/announce = 0
 	var/random = 0
+	var/allowDuplicates = 1
 
 	get_desc()
 		. += {"<br><span class='notice'>[random ? "Sending random Signals.":"Sending selected Signals."]<br>
 		[announce ? "Announcing Changes.":"Not announcing Changes."]<br>
+		[allowDuplicates ? "Duplicate entries allowed." : "Duplicate entries not allowed."]<br>
 		Current Selection: [(!current_index || current_index > signals.len ||!signals.len) ? "Empty":"[current_index] -> [signals[current_index]]"]<br>
-		Currently contains [signals.len] Items:<br></span>"}
-		for (var/x in signals)
-			. += "- [x]<br>[(signals[signals.len] == x) ? "</span>" : null]"
+		Currently contains [signals.len] Items:<br></span>
+		[signals.Join("<br>")]"}
 
 	New()
 		..()
@@ -1579,7 +1638,7 @@ var/list/mechanics_telepads = new/list()
 		mechanics.addInput("previous + send", "previousplus")
 		mechanics.addInput("send selected", "sendCurrent")
 		mechanics.addInput("send random", "sendRand")
-		configs.Add(list("Set Signal List","Set Signal List(Delimeted)","Toggle Announcements","Toggle Random"))
+		configs.Add(list("Set Signal List","Set Signal List(Delimeted)","Toggle Announcements","Toggle Random","Toggle Allow Duplicate Entries"))
 		src.append_default_configs(2)
 
 	attackby(obj/item/W as obj, mob/user as mob)
@@ -1636,6 +1695,9 @@ var/list/mechanics_telepads = new/list()
 				if("Toggle Random")
 					random = !random
 					boutput(user, "[random ? "Now picking Items at random.":"Now using selected Items."]")
+				if("Toggle Allow Duplicate Entries")
+					allowDuplicates = !allowDuplicates
+					boutput(user, "[allowDuplicates ? "Allowing addition of duplicate items." : "Not allowing addition of duplicate items."]")
 
 	proc/selitem(var/datum/mechanicsMessage/input)
 		if(!input) return
@@ -1687,11 +1749,19 @@ var/list/mechanics_telepads = new/list()
 	proc/additem(var/datum/mechanicsMessage/input)
 		if(!input) return
 
-		signals.Add(input.signal)
-		if(announce)
-			componentSay("Added : [input.signal]")
+		if(allowDuplicates)
+			signals.Add(input.signal)
+			signals[input.signal] = 1
+			if(announce)
+				componentSay("Added: [input.signal]")
 
-		return
+		else
+			if(!signals[input.signal])
+				signals[input.signal] = 1
+				if(announce)
+					componentSay("Added: [input.signal]")
+			else if(announce)
+				componentSay("Duplicate entry - rejected: [input.signal]")
 
 	proc/sendRand(var/datum/mechanicsMessage/input)
 		if(!input) return
@@ -2521,7 +2591,7 @@ var/list/mechanics_telepads = new/list()
 			instrument = I
 			sounds = I.sounds_instrument
 			volume = I.volume
-			delay = I.spam_timer
+			delay = I.note_time
 		else if (istype(W, /obj/item/clothing/head/butt))
 			instrument = W
 			sounds = 'sound/voice/farts/poo2.ogg'

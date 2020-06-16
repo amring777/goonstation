@@ -1,5 +1,131 @@
 
+(t)mon jun 15 20
+(u)mbc
+(*)New and improved directional lights (optimized + smoother)
+(u)pali
+(+)Cairngorm now has a plaque tracking nukie wins / losses
+(u)glassofmilk
+(p)830
+(e)🆕🎨|feature, sprites
+(*)Added a new File Component to the MechComp Dispenser that allows saving and re-sending computer files
+(+)Wifi and Powernet-networking Components now also transmit any files attached to packets they receive
+(u)pali
+(+)Create Viewport HUD button for AIs.
+(u)Sovexe
+(p)1105
+(e)🐛🆕|bug, feature
+(+)Borgs can now pickup and carry mentor mice.
+(t)sun jun 14 20
+(u)mbc + Flaborized
+(p)1103
+(e)🎨|sprites
+(*)Added triangle, tambourine, and cowbell instruments. You can order these through the QM.
+(u)zjdtmkhzt
+(p)1077
+(e)⚖🆕|balance, feature
+(+)Changed the way spreading pathogen symptoms work to hopefully make it more obvious how to avoid being infected. (Pathology is still disabled.)
+(u)mbc
+(p)1092
+(e)|
+(*)The cyalume saber is now an excellent blocking weapon that provides very high disorient resistance as well as reflecting all incoming projectiles while in block mode.
+(*)Removed the cyalume saber's ability to stun.
+(u)UrsulaMajor
+(p)1099
+(e)🆕🔄|feature, rework
+(*)You can now vote for multiple maps
+(u)zjdtmkhzt
+(p)1037
+(e)🆕|feature
+(+)Added incubator to grow your pathogen samples. It can also fill vials by clicking it.  (Pathology is still disabled.)
+(t)sat jun 13 20
+(u)mbc
+(p)1089
+(e)🆕🎨|feature, sprites
+(*)Added a new way to play the sax, trumpet, fiddle, and piano.
+(u)Tarmunora
+(p)1025
+(e)🐛|bug
+(+)Corpses in body bags and welded lockers/etc will no longer produce miasma
+(u)kyle
+(p)1072
+(e)🆕|feature
+(*)Added fake wrestling belts so you can wrestle to your heart's content without actually hurting your opponent! Just like "real" wrestling!
+(t)fri jun 12 20
+(u)UrsulaMajor
+(p)1069
+(e)|
+(+)On Ass Jam, YEET! explosions are real
+(u)pali & kubius
+(p)1047
+(e)🗺🔄🎨|mapping, rework, sprites
+(*)Nicer shuttle floors and shuttle lighting. Cog1 and Cog2 arrivals refurbished.
+(u)Tarmunora
+(p)1050
+(e)⛔|removal
+(+)Lights will no longer break from being toggled off and on.
+(t)thu jun 11 20
+(u)Erinexx
+(p)805
+(e)🎨|sprites
+(+)New chemgrenade sprites, now with visible coloured reagents!
+(u)kyle
+(p)1038
+(e)|
+(+)Mapvoting for the succeeding round will now begin ~30 seconds into the pre-game lobby.
+(u)pali
+(*)Ghosts' Toggle Lighting now has a thrid state which removes the pseudo-night vision.
+(u)Gerhazo
+(p)968
+(e)⚖🔄|balance, rework
+(*)Added a "handling of contraband permit" access level present on appropriate jobs' ID cards and identification computers. Firearm permit now only permits you to carry firearms, other kinds of contraband apply under this new permit, which scanners and bots will take into account.
+(*)Security sechud glasses, securitrons, guardbuddies and security scanners now prioritise a person's real identity rather than just the ID card they're holding, if the target's face is not concealed.
+(u)pali
+(p)1010
+(e)🔄🎨|rework, sprites
+(*)New airbridge visuals and other minor improvements.
+(t)wed jun 10 20
+(u)pali
+(p)972
+(e)|
+(+)Internal explosion changes that will hopefully make it harder to run away from them
+(u)pali
+(p)1035
+(e)🆕🗺|feature, mapping
+(*)Added Noah's Shuttle medal for rescuing 6 station pets on the shuttle.
+(u)Tarmunora
+(p)1007
+(e)🔄|rework
+(+)Changed cryotubes to give a constant drip of reagents. Total transfer rate unaffected
+(t)tue jun 09 20
+(u)Tarmunora
+(p)1008
+(e)⚖|balance
+(+)Added nukie grenade launcher to the pool of items ineligible for arm surgery
+(u)mbc
+(p)1029
+(e)|
+(+)Fixed regression where pushing a dense item you were pulling would break the pull.
+(u)Sovexe
+(p)1013
+(e)🆕🔄|feature, rework
+(+)Items on surgical trays now appear in the right-click context menu. Additionally items won't appear under the tray, and will now glide smoothly with the tray.
+(u)glassofmilk
+(p)656
+(e)🆕|feature
+(+)Added Toggle Allow Duplicate Entries setting to the Selection Component.
 (t)mon jun 08 20
+(u)mbc
+(p)1015
+(e)|
+(+)Morphine is a little more effective at ignoring damage slows and a little less punishing on your stamina.
+(u)mbc
+(p)1009
+(e)|
+(*)Add Synaptizine to medical vendors + buffed the stun resist effect on synaptizine a bit
+(u)Tarmunora
+(p)1006
+(e)🐛|bug
+(+)Fixed issue where you could unanchor a shambler and throw them
 (u)pali
 (p)986
 (e)🆕|feature

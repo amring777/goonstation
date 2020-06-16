@@ -38,6 +38,7 @@
 	mouse_opacity = 0
 	mat_changename = 0
 	mat_changedesc = 0
+	text = ""
 	var/lightswitch = 1
 	var/may_eat_here_in_restricted_z = 0
 
@@ -474,7 +475,7 @@
 #else
 	requires_power = 0
 	luminosity = 1
-	force_fullbright = 1
+	force_fullbright = 0
 #endif
 	sound_environment = 2
 	expandable = 0
