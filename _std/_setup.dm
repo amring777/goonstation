@@ -77,7 +77,7 @@
 
 #define OVERLOAD_PLAYERCOUNT 95 //when pcount is above this number on round start, increase ticklag to OVERLOADED_WORLD_TICKLAG to try to maintain smoothness
 #define OSHAN_LIGHT_OVERLOAD 18 //when pcount is above this number on game load, dont generate lighting surrounding the station because it lags the map to heck
-
+#define SLOW_LIFE_PLAYERCOUNT 65 //whenn pcount is >= this number, slow Life() processing a bit
 
 #define DEFAULT_CLICK_DELAY MIN_TICKLAG //used to be 1
 #define COMBAT_CLICK_DELAY 10
@@ -256,6 +256,13 @@
 #define BLOCK_STAB					16384	//block an extra point of stab damage when used to block
 #define BLOCK_BURN					32768	//block an extra point of burn damage when used to block
 #define BLOCK_BLUNT					65536	//block an extra point of blunt damage when used to block
+
+//tooltip flags for rebuilding
+#define REBUILD_ALWAYS				1		//rebuild tooltip every single time without exception
+#define REBUILD_DIST				2		//force rebuild if dist does not match cache
+#define REBUILD_USER				4		//force rebuild if viewer has changed at all
+#define REBUILD_SPECTRO				8		//force rebuild if spectrospec status of viewer has changed
+
 
 //clothing dirty flags (not used for anything other than submerged overlay update currently. eventually merge into update_clothing)
 #define C_BACK 1
@@ -888,6 +895,7 @@ proc/default_frequency_color(freq)
 #define INGEST 2
 #define INJECT 3
 #define MAX_TEMP_REACTION_VARIANCE 8
+#define CHEM_EPSILON 0.0001
 
 //moved from communications.dm
 #define TRANSMISSION_WIRE	0

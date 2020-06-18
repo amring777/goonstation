@@ -327,9 +327,19 @@ Green Wire: <a href='?src=\ref[src];wires=[WIRE_TRANSMIT]'>[src.wires & WIRE_TRA
 
 			if (R.accept_rad(src, messages, connection))
 				R.speech_bubble()
-				for (var/i in R.send_hear())
-					if (!(i in receive))
-						receive += i
+				if (secure)
+					for (var/i in R.send_hear())
+						if (!(i in receive))
+							receive += i
+
+							//mbc : i dont like doing this here but its the easiest place to fit it in since this is a point where we have access to both the receiving mob and the radio they are receiving through
+							var/mob/rmob = i
+							rmob.playsound_local(R, 'sound/misc/talk/radio2.ogg', 30, 1, -MAX_SOUND_RANGE+5, pitch = 1, ignore_flag = SOUND_SPEECH)//gfdsgfdsgfsfgs
+
+				else
+					for (var/i in R.send_hear())
+						if (!(i in receive))
+							receive += i
 
 		else if (istype(I, /obj/item/mechanics/radioscanner)) //MechComp radio scanner
 			var/obj/item/mechanics/radioscanner/R = I
