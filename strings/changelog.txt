@@ -1,4 +1,56 @@
 
+(t)fri jul 24 20
+(u)Kyle and Flaborized
+(p)1574
+(e)🆕🎨|feature, sprites
+(+)Wizard spell rings. Currently admin only. Sprites by flab, obviously.
+(u)mbc
+(*)New HUD highlights for humans to indicate where items may be placed, which hand(s) an item would go into, and making the intents/drop buttons more clear on the default hud.
+(*)You can toggle off the item ghosts that appear on mouse-over using the Game panel on the top left menu.
+(u)BatElite
+(p)1514
+(e)🎨|sprites
+(*)New cyborg upgrade sprites.
+(u)Superlagg
+(p)1526
+(e)🆕|feature
+(*)Zip guns now explode one shot later than they used to.
+(t)thu jul 23 20
+(u)MarkNstein
+(p)1536
+(e)🔄|rework
+(*)Action(bar)s will no longer reset upon successive attempts.
+(u)mbc
+(p)1584
+(e)🆕|feature
+(*)Handspider can now pick up items but moves slowly and cannot sprint while doing so. Legworm has more stamina, can throw items by clicking on them, and fixed writhe ability (was stunning the legworm much longer than it should). Eyespider can move faster. Buttcrab farts can block line of sight.
+(t)wed jul 22 20
+(u)mbc
+(+)QOL stuff for the hud - you can now mousedrag from slot to slot without directly clicking the item and see tooltips without pixel perfect hovering. Also slots enlarge slightly to let you know they will accept a held item. Doesnt work for containers hud yet.
+(u)Zamujasa
+(e)🔄|rework
+(*)Tweaked some parameters of how the cloner and grinder work. May speed up cloning and make it less likely to get stuck in the cloner for long periods of time.
+(u)Chickenish
+(p)1507
+(e)🆕|feature
+(+)Added a suicide for the Portable Reclaimer, it's quite cubular.
+(u)Kyle and BatElite
+(p)1563
+(e)🐛🆕🎨|bug, feature, sprites
+(+)Clownspiders now protect their momma when attacked.
+(+)Fire Elemental/Clown/Cluwne spider ability button sprites added by BatElite.
+(u)MarkNstein
+(p)1428
+(e)🆕|feature
+(+)Miners now get PDA notifications of RockBox™ sales.
+(u)Carbadox
+(p)1458
+(e)🆕🗺|feature, mapping
+(*)Added the crate manufactor to Atlas, Clarion, Destiny, Cog1, Cog2, Horizon and Oshan
+(u)AwkwardDryad
+(p)1179
+(e)🆕🎨|feature, sprites
+(*)Added chopsticks and premium plastic silverware
 (t)tue jul 21 20
 (u)CodeDude
 (p)1566

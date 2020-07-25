@@ -619,6 +619,7 @@
 	caliber = null // use any ammo at all BA HA HA HA HA
 	max_ammo_capacity = 2
 	var/failure_chance = 6
+	var/failured = 0
 
 	New()
 #if ASS_JAM
@@ -634,16 +635,22 @@
 		..()
 #endif
 
-	shoot()
-		if(ammo && ammo.amount_left && current_projectile && current_projectile.caliber && current_projectile.power)
-			failure_chance = max(0,min(33,round(current_projectile.power/2 - 9)))
-		if(canshoot() && prob(failure_chance)) // Empty zip guns had a chance of blowing up. Stupid (Convair880).
+	shoot(var/target,var/start ,var/mob/user)
+		if(failured)
 			var/turf/T = get_turf(src)
 			explosion(src, T,-1,-1,1,2)
 			qdel(src)
-		else
-			..()
-			return
+		if(ammo && ammo.amount_left && current_projectile && current_projectile.caliber && current_projectile.power)
+			failure_chance = max(0,min(33,round(current_projectile.power/2 - 9)))
+		if(canshoot() && prob(failure_chance)) // Empty zip guns had a chance of blowing up. Stupid (Convair880).
+			failured = 1
+			if(prob(failure_chance))	// Sometimes the failure is obvious
+				playsound(src.loc, "sound/impact_sounds/Metal_Hit_Heavy_1.ogg", 50, 1)
+				boutput(user, "<span class='alert'>The [src]'s shodilly thrown-together [pick("breech", "barrel", "bullet holder", "firing pin", "striker", "staple-driver mechanism", "bendy metal part", "shooty-bit")][pick("", "...thing")] [pick("cracks", "pops off", "bends nearly in half", "comes loose")]!</span>")
+			else						// Other times, less obvious
+				playsound(src.loc, "sound/impact_sounds/Generic_Snap_1.ogg", 50, 1)
+		..()
+		return
 
 /obj/item/gun/kinetic/silenced_22
 	name = "STL Orion"
@@ -1312,3 +1319,43 @@
 		ammo.amount_left = 6 //spawn full please
 		current_projectile = new /datum/projectile/special/spawner/gun
 		..()
+
+/obj/item/gun/kinetic/meowitzer
+	name = "\improper Meowitzer"
+	desc = "It purrs gently in your hands."
+	icon = 'icons/obj/items/mining.dmi'
+	icon_state = "blaster"
+
+	color = "#ff7b00"
+	force = 5
+	caliber = 20
+	max_ammo_capacity = 1
+	auto_eject = 0
+	flags =  FPRINT | TABLEPASS | CONDUCT | USEDELAY | EXTRADELAY
+	spread_angle = 0
+	can_dual_wield = 0
+	slowdown = 0
+	slowdown_time = 0
+	two_handed = 1
+	w_class = 4
+
+	New()
+		ammo = new/obj/item/ammo/bullets/meowitzer
+		current_projectile = new/datum/projectile/special/meowitzer
+		..()
+
+	afterattack(atom/A, mob/user as mob)
+		if(src.ammo.amount_left < max_ammo_capacity && istype(A, /obj/critter/cat))
+			src.ammo.amount_left += 1
+			user.visible_message("<span class='alert'>[user] loads \the [A] into \the [src].</span>", "<span class='alert'>You load \the [A] into \the [src].</span>")
+			src.current_projectile.icon_state = A.icon_state //match the cat sprite that we load
+			qdel(A)
+			return
+		else
+			..()
+
+/obj/item/gun/kinetic/meowitzer/inert
+	New()
+		..()
+		ammo = new/obj/item/ammo/bullets/meowitzer/inert
+		current_projectile = new/datum/projectile/special/meowitzer/inert

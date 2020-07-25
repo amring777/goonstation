@@ -93,6 +93,7 @@
 #define TOOLTIP_RIGHT 2
 #define TOOLTIP_LEFT 4
 #define TOOLTIP_CENTER 8
+#define TOOLTIP_TOP2 16
 
 #define TOOLTIP_ALWAYS 1
 #define TOOLTIP_NEVER 2
@@ -754,7 +755,7 @@ proc/default_frequency_color(freq)
 #define SUSTAINED_RUN_REQ 8				//how many tiles to start sustained run
 
 //This is a bad solution. Optimally this should scale.
-#define STAMINA_MIN_WEIGHT_CLASS 2 	    //Minimum weightclass (w_class) of an item that allows for knock-outs and critical hits.
+#define STAMINA_MIN_WEIGHT_CLASS 0 	    //Minimum weightclass (w_class) of an item that allows for knock-outs and critical hits.
 
 //This is the last resort option for the RNG lovers.
 #define STAMINA_STUN_ON_CRIT 0          //Getting crit stuns the affected person for a short moment?
@@ -973,7 +974,7 @@ proc/default_frequency_color(freq)
 
 //Short macro that will give TRG, XP amount if they have the appropriate job.
 //JOB_XP(someMobHere, "Clown", 5) //Would give someMobHere 5xp if they are a clown.
-#define JOB_XP(TRG, JOB, XP) if(ismob(TRG) && TRG:job == JOB && TRG:key) award_xp(TRG:key, JOB, XP)
+#define JOB_XP(TRG, JOB, XP) if(ismob(TRG) && TRG:job == JOB && TRG:key) award_xp_and_archive(TRG:key, JOB, XP)
 
 //0.2, 25, 100, 225, 400, 625 ... 7=1225,10=2500,20=10000,30=22500,50=62500,100=250000
 //Say a round lasts 60 minutes. Level 5 should take 2 hours. ??
