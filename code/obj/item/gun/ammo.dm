@@ -63,6 +63,7 @@
 
 	// This is needed to avoid duplicating empty magazines (Convair880).
 	var/delete_on_reload = 0
+	var/force_new_current_projectile = 0 //for custom grenade shells
 
 	var/sound_load = 'sound/weapons/gunload_light.ogg'
 
@@ -219,7 +220,7 @@
 			K.ejectcasings()
 
 			// Required for swap() to work properly (Convair880).
-			if (K.ammo.type != A.type)
+			if (K.ammo.type != A.type || A.force_new_current_projectile)
 				var/obj/item/ammo/bullets/ammoGun = new A.type
 				ammoGun.amount_left = K.ammo.amount_left
 				ammoGun.ammo_type = K.ammo.ammo_type
@@ -625,14 +626,14 @@
 
 
 /obj/item/ammo/bullets/cannon
-	sname = "20mm AP"
-	name = "20mm AP shells"
+	sname = "20mm APHE"
+	name = "20mm APHE shells"
 	amount_left = 5
 	max_amount = 5
 	icon_state = "40mmR"
 	ammo_type = new/datum/projectile/bullet/cannon
 	caliber = 0.787
-	w_class = 3
+	w_class = 2
 	icon_dynamic = 1
 	icon_empty = "40mmR-0"
 	sound_load = 'sound/weapons/gunload_heavy.ogg'
@@ -725,6 +726,7 @@
 	icon_empty = "paintballb-4"
 	delete_on_reload = 0 //deleting it before the shell can be fired breaks things
 	sound_load = 'sound/weapons/gunload_heavy.ogg'
+	force_new_current_projectile = 1
 
 	attackby(obj/item/W as obj, mob/living/user as mob)
 		var/datum/projectile/bullet/grenade_shell/AMMO = src.ammo_type
